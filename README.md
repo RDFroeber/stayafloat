@@ -1,0 +1,2 @@
+# aFloat
+### a Sails application
