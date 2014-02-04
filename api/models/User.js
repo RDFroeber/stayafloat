@@ -7,7 +7,15 @@
  */
 
  var User = {
- 	adapter: 'postgresql',
+ 	// Define a custom table name
+	tableName: 'user',
+
+	// Set schema true/false for adapters that support schemaless
+	schema: true,
+
+	// Define an adapter to use
+	adapter: 'postgresql',
+
 
  	attributes: {
  		userName: {
@@ -16,25 +24,24 @@
  			unique: true,
  			required: true
  		},
- 		password: {
+ 		encryptedPassword: {
  			type: 'string',
  			required: true,
- 			minLength: 6,
- 			columnName: 'encrypted_password'
+ 			minLength: 6
  		},
  		admin: {
  			type: 'boolean',
  			defaultsTo: 'false'
  		}
- 	},
+ 	}
 
- 	beforeCreate: function(values, next) {
-	    bcrypt.hash(values.password, 10, function(err, hash) {
-		    if(err) return next(err);
-		    values.password = hash;
-		    next();
-	    });
-	}
+ // 	beforeCreate: function(values, next) {
+	//     bcrypt.hash(values.password, 10, function(err, hash) {
+	// 	    if(err) return next(err);
+	// 	    values.password = hash;
+	// 	    next();
+	//     });
+	// }
 
  };
 
