@@ -16,15 +16,20 @@
  */
 
 module.exports = {
-    
-  
+
+	new: function(req, res) {
+		res.view();
+  },
+ 	create: function(req, res) {
+
+  }
 
 
   /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to UsersController)
    */
-  _config: {}
+  // _config: {}
 
   
 };
