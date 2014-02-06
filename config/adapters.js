@@ -25,12 +25,11 @@ module.exports.adapters = {
   },
 
   // PostgreSQL
-  config: {
-    database: 'aFloat_db',
-    host: 'localhost',
-    user: 'freelancer',
-    password: 'Infor2014',
-    port: 5432,
-    pool: false
+  postgres: {
+    module   : 'sails-postgresql',
+    host     : 'localhost',
+    user     : 'RaleighD',
+    database : 'afloat_db',
+    schema: true //This makes sure that sails matches the database schema to your models.
   }
 };
