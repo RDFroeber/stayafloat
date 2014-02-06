@@ -7,31 +7,24 @@
  */
 
  var User = {
- 	// Define a custom table name
-	tableName: 'user',
-
-	// Set schema true/false for adapters that support schemaless
-	schema: true,
 
 	// Define an adapter to use
 	adapter: 'postgresql',
 
 
  	attributes: {
- 		userName: {
+ 		username: {
  			type: 'string',
  			maxLength: 20,
  			unique: true,
  			required: true
  		},
  		encryptedPassword: {
- 			type: 'string',
- 			required: true,
- 			minLength: 6
+ 			type: 'string'
  		},
  		admin: {
  			type: 'boolean',
- 			defaultsTo: 'false'
+ 			defaultsTo: false
  		}
  	}
 
