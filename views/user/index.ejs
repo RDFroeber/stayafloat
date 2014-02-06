@@ -1,2 +1,6 @@
-<h1>All Users</h1>
-<%= allUsers %>
+<h2>All Users</h2>
+  <ul>
+    <% _.each(users, function(user){ %>
+      <li><%= user.username %></li>
+    <% }) %>
+  </ul>
