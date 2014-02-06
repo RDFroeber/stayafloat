@@ -1,16 +1,23 @@
 <form class="signup" action="/user/create" method="POST">
-<h2>Sign-up</h2>
-  	<label for="username">Username</label>
-  	<input type="text" placeholder="Username" name="username" id="password" /><br />
+  <h2>Sign-up</h2>
+  <% if(flash && flash.err){ %>
+    <div class="flash-errors">
+  <% Object.keys(flash.err).forEach(function(error){ %>
+    <p><%- JSON.stringify(flash.err[error])%></p>
+  <% }) %>
+    </div>
+  <% } %>
 
-  	<label for="password">Password</label>
- 	<input type="password" placeholder="Password" name="password" id="password"><br />
+  <label for="username">Username</label>
+  <input type="text" placeholder="Username" name="username" /><br />
 
-   	<label for="confirmation">Password Confirmation</label>
-  	<input type="password" placeholder="Password confirmation" name="confirmation" id="confirmation"><br />
+  <label for="password">Password</label>
+    <input type="password" placeholder="Password" name="password" ><br />
 
-  	<input type="submit" value="Create Account" />
+  <label for="confirmation">Password Confirmation</label>
+  <input type="password" placeholder="Password confirmation" name="confirmation" ><br />
 
-  	<p class="login">Already have an account? <a href="user/login">Login</a></p>
-  	<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+  <input type="submit" value="Create Account" />
+
+  <input type="hidden" name="_csrf" value="<%= _csrf %>" />
 </form>
