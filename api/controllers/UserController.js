@@ -1,8 +1,8 @@
 /**
- * UsersController
+ * UserController
  *
  * @module      :: Controller
- * @description	:: A set of functions called `actions`.
+ * @description :: A set of functions called `actions`.
  *
  *                 Actions contain code telling Sails how to respond to a certain type of request.
  *                 (i.e. do stuff, then send some JSON, show an HTML page, or redirect to another URL)
@@ -16,102 +16,79 @@
  */
 
 module.exports = {
-
-	index: function(req, res) {
-		User.findAll(function(err, users){
-			if (err) return res.send(err, 500);
-
-			res.view({
-				model: users
-			});
-		});
+  index: function(req, res) {
+    User.find(function allUsers(err, users) {
+      res.view({users: users});
+    });
+  },
+    
+  new: function(req, res) {
+    // Pasing in flash message with errors from create action
+    res.locals.flash = req.session.flash
+    res.view();
+    req.session.flash = {}
   },
 
-	new: function(req, res) {
-		res.view();
-  },
-
- 	create: function(req, res, next) {
- 		var userObj = {
+  create: function(req, res) {
+    var userObj = {
       username: req.param('username'),
       password: req.param('password'),
       confirmation: req.param('confirmation')
     }
 
-    // Create a User with the params sent from 
-    User.create(userObj, function userCreated(err, user) {
+    // Create new user with params from form
+    User.create(userObj, function userCreated(err, newUser) {
 
       // If there's an error
       if(err) {
-        console.log(err);
-
-        // If error redirect back to sign-up page
-        // return res.redirect('/user/new');
+        // Create a flash message with error
+        req.session.flash = {
+          err: err
+        }
+        // Then redirect back to sign-up page
+        return res.redirect('/user/new');
       }
-      res.json(user);
 
-    //   // Log user in
-    //   // req.session.authenticated = true;
-    //   // req.session.User = user;
+      newUser.save(function(err, newUser) {
+        // Let other subscribed sockets know that the user was created.
+        User.publishCreate(newUser);
 
-    //   user.save(function(err, user) {
-    //     if(err) {
-    //     	console.log(err);
-  				
-  		// 		return next(err);
-  		// 	}
-
-    //   // Let other subscribed sockets know that the user was created.
-    //   User.publishCreate(user);
-
-    //     // After successfully creating the user redirect to the show action
-    //     res.redirect('/user/show/' + user.id);
-    //   });
+        // On creation success redirect to the show view
+        res.redirect('/user/show/' + newUser.id);
+      });
     });
   },
 
-  show: function(req, res, next) {
+  show: function(req, res) {
     User.findOne(req.param('id'), function foundUser(err, user) {
-      if (err) return next(err);
       if (!user) return next();
-      res.view({
-        user: user
-      });
+      res.view({user: user});
     });
-  }
+  },
 
-  // login: function(req, res) {
-  //   var bcrypt = require('bcrypt');
+  edit: function(req, res, next) {
+    // Find the user from the id passed in via params
+    User.findOne(req.param('id'), function foundUser(err, user) {
+      if (!user) return next('Sorry that user doesn\'t exist.');
+        res.view({user: user});
+    });
+  },
 
-  //   User.findOneByEmail(req.body.email).done(function (err, user) {
-  //     if (err) res.json({ error: 'DB error' }, 500);
+  update: function(req, res, next) {
+    var userObj = {
+      username: req.param('username'),
+      password: req.param('password'),
+      confirmation: req.param('confirmation')
+    }
+    
+    User.update(req.param('id'), userObj, function userUpdated(err) {
+      if (err) {
+        return res.redirect('/user/edit/' + req.param('id'));
+      }
 
-  //     if (user) {
-  //       bcrypt.compare(req.body.password, user.password, function (err, match) {
-  //         if (err) res.json({ error: 'Server error' }, 500);
-
-  //         if (match) {
-  //           // password match
-  //           req.session.user = user.id;
-  //           res.json(user);
-  //         } else {
-  //           // invalid password
-  //           if (req.session.user) req.session.user = null;
-  //           res.json({ error: 'Invalid password' }, 400);
-  //         }
-  //       });
-  //     } else {
-  //       res.json({ error: 'User not found' }, 404);
-  //     }
-  //   });
-  // }
-
-
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to UsersController)
-   */
-  // _config: {}
+      res.redirect('/user/show/' + req.param('id'));
+    });
+  },
 
   
 };
