@@ -19,21 +19,20 @@ module.exports = {
   index: function(req, res) {
     User.find(function allUsers(err, users) {
       res.view({users: users});
+      // res.json(users);
     });
   },
     
   new: function(req, res) {
-    // Pasing in flash message with errors from create action
-    res.locals.flash = req.session.flash
     res.view();
-    req.session.flash = {}
   },
 
   create: function(req, res) {
     var userObj = {
       username: req.param('username'),
       password: req.param('password'),
-      confirmation: req.param('confirmation')
+      confirmation: req.param('confirmation'),
+      admin: req.param('admin')
     }
 
     // Create new user with params from form
@@ -45,24 +44,14 @@ module.exports = {
         req.session.flash = {
           err: err
         }
-        // Then redirect back to sign-up page
+        // Then redirect back to account creation
         return res.redirect('/user/new');
       }
 
       newUser.save(function(err, newUser) {
-        // Let other subscribed sockets know that the user was created.
-        User.publishCreate(newUser);
-
-        // On creation success redirect to the show view
-        res.redirect('/user/show/' + newUser.id);
+        // On creation success redirect to admin main
+        res.redirect('/user');
       });
-    });
-  },
-
-  show: function(req, res) {
-    User.findOne(req.param('id'), function foundUser(err, user) {
-      if (!user) return next();
-      res.view({user: user});
     });
   },
 
@@ -78,7 +67,8 @@ module.exports = {
     var userObj = {
       username: req.param('username'),
       password: req.param('password'),
-      confirmation: req.param('confirmation')
+      confirmation: req.param('confirmation'),
+      admin: req.param('admin')
     }
     
     User.update(req.param('id'), userObj, function userUpdated(err) {
@@ -86,7 +76,7 @@ module.exports = {
         return res.redirect('/user/edit/' + req.param('id'));
       }
 
-      res.redirect('/user/show/' + req.param('id'));
+      res.redirect('/user');
     });
   },
 
