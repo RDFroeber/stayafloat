@@ -27,14 +27,15 @@
   <body>
     <header>
       <a class="logo" href="/">A Float</a>
-      <!-- global nav -->
       <nav>
         <ul>
-          <li><a href="/">About</a></li>
-          <li><a href="/">Services</a></li>
-          <li><a href="/">News</a></li>
-          <li><a href="/">Locations</a></li>
-          <li><a href="/user/new">Sign Up</a></li>
+          <li><a href="/">Home</a></li>
+          <% if(session.authenticated && session.User.admin) { %>
+            <li><a href="/user">Admin Main</a></li>
+            <li><a href="/session/destroy">Logout</a><li>
+          <% } else { %>
+            <li><a href="/session/new">Login</a></li>
+          <% } %>
         </ul>
       </nav>
     </header>
