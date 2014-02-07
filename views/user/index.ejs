@@ -2,5 +2,10 @@
   <ul>
     <% _.each(users, function(user){ %>
       <li><%= user.username %></li>
+      <form action="/user/destroy/<%= user.id %>" method="POST">
+				<input type="hidden" name="_method" value="delete"/>
+				<input type="submit" value="Delete"/>
+				<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+			</form>
     <% }) %>
   </ul>
