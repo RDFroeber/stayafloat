@@ -16,7 +16,7 @@ module.exports.adapters = {
 
   // If you leave the adapter config unspecified 
   // in a model definition, 'default' will be used.
-  'default': 'postgresql',
+  'default': 'mysql',
 
   // Persistent adapter for DEVELOPMENT ONLY
   // (data is preserved when the server shuts down)
@@ -24,11 +24,21 @@ module.exports.adapters = {
     module: 'sails-disk'
   },
 
+  // MySQL
+  mysql: {
+    module   : 'sails-mysql',
+    host     : 'localhost',
+    user     : 'freelancer',
+    password : 'Infor2014',
+    database : 'afloat_db',
+    schema: true //This makes sure that sails matches the database schema to your models.
+  },
+
   // PostgreSQL
   postgres: {
     module   : 'sails-postgresql',
     host     : 'localhost',
-    user     : 'RaleighD',
+    user     : 'freelancer',
     database : 'afloat_db',
     schema: true //This makes sure that sails matches the database schema to your models.
   }
